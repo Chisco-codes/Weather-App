@@ -19,20 +19,32 @@
             --transition: all 0.4s ease;
         }
 
+        body.dark {
+            --text: #e0e0e0;
+            --bg-light: #1a1a1a;
+            --card: #2d2d2d;
+            --shadow: 0 6px 20px rgba(0,0,0,0.5);
+        }
+
         body {
             font-family: system-ui, -apple-system, sans-serif;
             margin: 0;
             min-height: 100vh;
             color: var(--text);
-            background: linear-gradient(135deg, #fffaf0, #ffe5cc);
-            transition: background 1s ease;
+            background: linear-gradient(135deg, var(--bg-light), #ffe5cc);
+            transition: background 1s ease, color 0.4s ease;
         }
 
+        /* Weather backgrounds – slightly adjusted for dark mode readability */
         body.rain { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
         body.clouds, body.mist { background: linear-gradient(135deg, #bdc3c7, #95a5a6); }
         body.clear, body.sunny { background: linear-gradient(135deg, #f39c12, #e67e22); }
         body.drizzle, body.thunderstorm { background: linear-gradient(135deg, #34495e, #2c3e50); color: white; }
         body.snow { background: linear-gradient(135deg, #ecf0f1, #bdc3c7); }
+
+        body.dark.rain { background: linear-gradient(135deg, #1e3a8a, #1e40af); }
+        body.dark.clouds, body.dark.mist { background: linear-gradient(135deg, #4b5563, #6b7280); }
+        body.dark.clear, body.dark.sunny { background: linear-gradient(135deg, #92400e, #7c2d12); }
 
         .container {
             max-width: 520px;
@@ -43,6 +55,11 @@
             box-shadow: var(--shadow);
             backdrop-filter: blur(10px);
             animation: fadeIn 0.8s ease;
+            transition: background 0.4s ease;
+        }
+
+        body.dark .container {
+            background: rgba(45,45,45,0.92);
         }
 
         @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
@@ -68,6 +85,14 @@
             border: 2px solid #ddd;
             border-radius: var(--radius);
             font-size: 1.05rem;
+            background: white;
+            color: var(--text);
+        }
+
+        body.dark input[type="text"] {
+            background: #374151;
+            border-color: #4b5563;
+            color: #f3f4f6;
         }
 
         input:focus {
@@ -89,11 +114,19 @@
 
         button:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
-        #unit-toggle, #get-location, #share-btn {
+        #unit-toggle, #get-location, #share-btn, #dark-toggle {
             background: var(--accent);
         }
 
-        #unit-toggle:hover, #get-location:hover, #share-btn:hover { background: #219653; }
+        #dark-toggle {
+            font-size: 1.2rem;
+            min-width: 48px;
+            padding: 14px;
+        }
+
+        #unit-toggle:hover, #get-location:hover, #share-btn:hover, #dark-toggle:hover {
+            background: #219653;
+        }
 
         .loading, #error-message {
             text-align: center;
@@ -109,6 +142,11 @@
             height: 32px;
             animation: spin 1s linear infinite;
             margin: 0 auto 12px;
+        }
+
+        body.dark .spinner {
+            border: 5px solid #4b5563;
+            border-top: 5px solid var(--primary);
         }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -157,11 +195,16 @@
         }
 
         .card {
-            background: rgba(255,255,255,0.7);
+            background: var(--card);
             padding: 16px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            box-shadow: var(--shadow);
+            transition: background 0.4s ease;
+        }
+
+        body.dark .card {
+            background: #374151;
         }
 
         .card-label {
@@ -207,6 +250,11 @@
             background: rgba(255,255,255,0.6);
             padding: 12px;
             border-radius: 12px;
+            transition: background 0.4s ease;
+        }
+
+        body.dark .forecast-day {
+            background: rgba(55,65,81,0.6);
         }
 
         .tips {
@@ -215,6 +263,11 @@
             background: rgba(230,126,34,0.1);
             border-radius: var(--radius);
             font-style: italic;
+        }
+
+        body.dark .tips {
+            background: rgba(230,126,34,0.2);
+            color: #d1d5db;
         }
 
         .recent {
@@ -229,9 +282,16 @@
             color: var(--text);
             padding: 8px 14px;
             font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        body.dark .recent button {
+            background: #4b5563;
+            color: #f3f4f6;
         }
 
         .recent button:hover { background: #dfe6e9; }
+        body.dark .recent button:hover { background: #6b7280; }
 
         #share-section {
             margin-top: 32px;
@@ -250,9 +310,34 @@
             min-height: 1.3em;
         }
 
+        /* Mobile improvements */
         @media (max-width: 500px) {
-            .container { margin: 12px; padding: 20px; }
-            .weather-main { flex-direction: column; text-align: center; }
+            .container { margin: 12px 8px; padding: 20px 16px; border-radius: 12px; }
+            h1 { font-size: 1.8rem; margin-bottom: 20px; }
+            form { flex-direction: column; gap: 12px; }
+            input[type="text"] { font-size: 1rem; padding: 14px 16px; }
+            button { padding: 14px 20px; font-size: 1rem; width: 100%; min-height: 48px; justify-content: center; }
+            .weather-main { flex-direction: column; text-align: center; gap: 16px; }
+            .temp { font-size: 3.2rem; }
+            .description { font-size: 1.3rem; }
+            .details-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .card { padding: 12px 8px; }
+            .card-value { font-size: 1.2rem; }
+            .forecast-grid {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+                scrollbar-color: var(--accent) transparent;
+                padding-bottom: 16px;
+            }
+            .forecast-day { min-width: 105px; flex-shrink: 0; }
+            #share-btn { width: 100%; margin-top: 16px; font-size: 1.05rem; }
+        }
+
+        @media (max-width: 360px) {
+            .details-grid { grid-template-columns: 1fr; }
+            .forecast-day { min-width: 95px; }
         }
     </style>
 </head>
@@ -266,6 +351,7 @@
         <button type="submit">Search</button>
         <button type="button" id="get-location">My Location</button>
         <button type="button" id="unit-toggle">°C / °F</button>
+        <button type="button" id="dark-toggle" title="Toggle dark mode">🌙</button>
     </form>
 
     <div class="loading" id="loading">
@@ -324,6 +410,7 @@
 
 <script>
     const API_KEY = '29744a1130f664b89090f6d1b3e2b38c'; // ← REPLACE WITH YOUR NEW KEY HERE!
+
     const CURRENT_URL = 'https://api.openweathermap.org/data/2.5/weather';
     const FORECAST_URL = 'https://api.openweathermap.org/data/2.5/forecast';
     const AQI_URL = 'https://api.openweathermap.org/data/2.5/air_pollution';
@@ -337,6 +424,27 @@
 
     let units = localStorage.getItem('units') || 'metric';
     document.getElementById('unit-toggle').textContent = units === 'metric' ? 'Switch to °F' : 'Switch to °C';
+
+    // ────────────────────────────── Dark Mode Setup ──────────────────────────────
+    let darkMode = localStorage.getItem('darkMode') === 'enabled' ||
+                   (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+    if (darkMode) document.body.classList.add('dark');
+    updateDarkToggle();
+
+    function updateDarkToggle() {
+        const btn = document.getElementById('dark-toggle');
+        btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+        btn.title = document.body.classList.contains('dark') ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+    }
+
+    document.getElementById('dark-toggle').addEventListener('click', () => {
+        darkMode = !darkMode;
+        document.body.classList.toggle('dark', darkMode);
+        localStorage.setItem('darkMode', darkMode ? 'enabled' : 'disabled');
+        updateDarkToggle();
+    });
+    // ──────────────────────────────────────────────────────────────────────────────
 
     // Auto-fill city from URL if present (?city=Accra)
     const urlParams = new URLSearchParams(window.location.search);
@@ -358,11 +466,15 @@
         getUserLocation();
     }
 
+    // ──────────────────────────────────────────────────────────────────────────────
+    // Your original JavaScript functions (unchanged)
+    // ──────────────────────────────────────────────────────────────────────────────
+
     async function fetchCity(city, retryCount = 0) {
         if (!city) return showError('Enter a city name');
         showLoading(true);
         hideError();
-        console.log(`Fetching for ${city} (attempt ${retryCount + 1})`); // Debug log
+        console.log(`Fetching for ${city} (attempt ${retryCount + 1})`);
         try {
             const weather = await fetchWithTimeout(`${CURRENT_URL}?q=${encodeURIComponent(city)}`);
             if (!weather) throw new Error('No weather data received');
@@ -373,17 +485,17 @@
             renderWeather(weather, forecast || {}, aqi || null);
             saveRecent(city);
         } catch (err) {
-            console.error('Fetch error:', err); // Debug log
+            console.error('Fetch error:', err);
             if (retryCount < 2) {
                 console.log('Retrying...');
-                setTimeout(() => fetchCity(city, retryCount + 1), 2000); // Retry after 2s
+                setTimeout(() => fetchCity(city, retryCount + 1), 2000);
                 return;
             }
             let msg = err.message || 'Something went wrong';
             if (msg.includes('timeout')) msg = 'API timeout — check connection or try again';
             else if (msg.includes('401')) msg = 'API key invalid — regenerate at openweathermap.org';
             showError(msg);
-            loadFallback(city); // Try cached data
+            loadFallback(city);
         } finally {
             showLoading(false);
         }
@@ -401,9 +513,9 @@
                 console.error('Geolocation error:', err);
                 showError('Location access denied — using default (Accra)');
                 showLoading(false);
-                fetchCity('Accra'); // Fallback to Accra
+                fetchCity('Accra');
             },
-            { timeout: 10000 } // 10s geolocation timeout
+            { timeout: 10000 }
         );
     }
 
@@ -426,13 +538,12 @@
                 return;
             }
             showError(err.message || 'Location fetch failed — try searching a city');
-            loadFallback('Your location'); // Generic fallback
+            loadFallback('Your location');
         } finally {
             showLoading(false);
         }
     }
 
-    // Timeout wrapper for fetch (5s max)
     async function fetchWithTimeout(url, timeout = 5000) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -457,7 +568,7 @@
     async function fetchAQI(lat, lon) {
         try {
             const url = `${AQI_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
-            const res = await fetchWithTimeout(url, 3000); // Shorter timeout for AQI
+            const res = await fetchWithTimeout(url, 3000);
             return res.list?.[0] || null;
         } catch (err) {
             console.warn('AQI fetch failed:', err);
@@ -481,7 +592,6 @@
         document.getElementById('wind-speed').textContent = `${current.wind?.speed || 0} m/s`;
         document.getElementById('pressure').textContent = `${current.main.pressure} hPa`;
 
-        // Local time & sun
         const tz = current.timezone;
         const now = new Date(Date.now() + (tz + new Date().getTimezoneOffset()) * 60000);
         document.getElementById('local-time').textContent = `Local time: ${now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
@@ -490,7 +600,6 @@
         const sunset = new Date((current.sys.sunset + tz) * 1000);
         document.getElementById('sun-times').textContent = `Sunrise: ${sunrise.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} • Sunset: ${sunset.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
 
-        // AQI
         if (aqiData) {
             const aqi = aqiData.main.aqi;
             const aqiText = ['Good', 'Fair', 'Moderate', 'Poor', 'Very Poor'][aqi - 1];
@@ -510,7 +619,6 @@
             document.getElementById('pollutants').innerHTML = '';
         }
 
-        // Tip
         const desc = current.weather[0].description.toLowerCase();
         let tip = "Enjoy the day!";
         if (desc.includes('rain') || desc.includes('shower')) tip = "Rainy vibes – grab an umbrella ☔";
@@ -519,7 +627,6 @@
         else if (desc.includes('haze') || desc.includes('dust')) tip = "Harmattan season? Wear a mask if dusty 🌫️";
         tipsEl.textContent = tip;
 
-        // Forecast
         const grid = document.getElementById('forecast-grid');
         grid.innerHTML = '';
         if (forecastData.list) {
@@ -539,7 +646,6 @@
 
         weatherInfo.classList.add('show');
         localStorage.setItem('lastCity', current.name);
-        // Cache basic data for fallback
         localStorage.setItem('cachedWeather', JSON.stringify({ current, units, timestamp: Date.now() }));
     }
 
@@ -547,8 +653,8 @@
         const cached = localStorage.getItem('cachedWeather');
         if (cached) {
             const data = JSON.parse(cached);
-            if (Date.now() - data.timestamp < 3600000) { // < 1 hour old
-                renderWeather(data.current, {}, null); // Render without forecast/AQI
+            if (Date.now() - data.timestamp < 3600000) {
+                renderWeather(data.current, {}, null);
                 document.getElementById('city-name').textContent = `${cityName} (cached)`;
                 console.log('Loaded cached data');
                 return;
