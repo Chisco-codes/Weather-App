@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
-    <meta name="description" content="Real-time weather + Air Quality - worldwide">
+    <meta name="description" content="Real-time weather + Air Quality – worldwide">
     <link rel="icon" href="https://openweathermap.org/themes/openweathermap/assets/img/favicon.ico" type="image/x-icon">
     <style>
         :root {
@@ -311,6 +311,44 @@
             .container { margin: 12px; padding: 20px; }
             .weather-main { flex-direction: column; text-align: center; }
         }
+
+        /* ────────────── City Suggestion Chips (new, tiny & professional) ────────────── */
+        #city-suggestions {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .suggestion-chip {
+            padding: 6px 14px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestion-chip:hover,
+        .suggestion-chip:focus {
+            background: #e2e8f0;
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        body.dark .suggestion-chip {
+            background: #374151;
+            border-color: #4b5563;
+            color: #e2e8f0;
+        }
+
+        body.dark .suggestion-chip:hover,
+        body.dark .suggestion-chip:focus {
+            background: #4b5563;
+        }
     </style>
 </head>
 <body>
@@ -319,7 +357,17 @@
     <h1>Weather App</h1>
 
     <form id="weather-form">
-        <input type="text" id="city-input" placeholder="City name (e.g. Accra, Kumasi, Lagos)" autocomplete="off">
+        <input type="text" id="city-input" placeholder="Enter a city name" autocomplete="off">
+
+        <!-- Suggestion chips – small, tappable, accessible -->
+        <div id="city-suggestions">
+            <button type="button" class="suggestion-chip" data-city="London">London</button>
+            <button type="button" class="suggestion-chip" data-city="New York">New York</button>
+            <button type="button" class="suggestion-chip" data-city="Tokyo">Tokyo</button>
+            <button type="button" class="suggestion-chip" data-city="Paris">Paris</button>
+            <button type="button" class="suggestion-chip" data-city="Dubai">Dubai</button>
+        </div>
+
         <button type="submit">Search</button>
         <button type="button" id="get-location">My Location</button>
         <button type="button" id="unit-toggle">°C / °F</button>
@@ -429,6 +477,16 @@
     document.getElementById('get-location').addEventListener('click', getUserLocation);
     document.getElementById('unit-toggle').addEventListener('click', toggleUnits);
     document.getElementById('share-btn').addEventListener('click', shareCurrentWeather);
+
+    // ────────────────────────────── Suggestion Chips (new) ──────────────────────────────
+    document.querySelectorAll('.suggestion-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const city = chip.getAttribute('data-city');
+            cityInput.value = city;
+            form.dispatchEvent(new Event('submit'));
+        });
+    });
+    // ────────────────────────────────────────────────────────────────────────────────────
 
     // Auto-load
     if (urlCity || localStorage.getItem('lastCity')) {
