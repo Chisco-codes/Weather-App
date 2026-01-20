@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
-    <meta name="description" content="Real-time weather + Air Quality – Accra & worldwide">
+    <meta name="description" content="Real-time weather + Air Quality - worldwide">
     <link rel="icon" href="https://openweathermap.org/themes/openweathermap/assets/img/favicon.ico" type="image/x-icon">
     <style>
         :root {
@@ -31,11 +31,10 @@
             margin: 0;
             min-height: 100vh;
             color: var(--text);
-            background: linear-gradient(135deg, var(--bg-light), #ffe5cc);
-            transition: background 1s ease, color 0.4s ease;
+            background: linear-gradient(135deg, #fffaf0, #ffe5cc);
+            transition: background 1s ease;
         }
 
-        /* Weather backgrounds – slightly adjusted for dark mode readability */
         body.rain { background: linear-gradient(135deg, #3498db, #2980b9); color: white; }
         body.clouds, body.mist { background: linear-gradient(135deg, #bdc3c7, #95a5a6); }
         body.clear, body.sunny { background: linear-gradient(135deg, #f39c12, #e67e22); }
@@ -120,7 +119,6 @@
 
         #dark-toggle {
             font-size: 1.2rem;
-            min-width: 48px;
             padding: 14px;
         }
 
@@ -195,11 +193,11 @@
         }
 
         .card {
-            background: var(--card);
+            background: rgba(255,255,255,0.7);
             padding: 16px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: var(--shadow);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             transition: background 0.4s ease;
         }
 
@@ -282,7 +280,6 @@
             color: var(--text);
             padding: 8px 14px;
             font-size: 0.9rem;
-            transition: background 0.3s;
         }
 
         body.dark .recent button {
@@ -310,34 +307,9 @@
             min-height: 1.3em;
         }
 
-        /* Mobile improvements */
         @media (max-width: 500px) {
-            .container { margin: 12px 8px; padding: 20px 16px; border-radius: 12px; }
-            h1 { font-size: 1.8rem; margin-bottom: 20px; }
-            form { flex-direction: column; gap: 12px; }
-            input[type="text"] { font-size: 1rem; padding: 14px 16px; }
-            button { padding: 14px 20px; font-size: 1rem; width: 100%; min-height: 48px; justify-content: center; }
-            .weather-main { flex-direction: column; text-align: center; gap: 16px; }
-            .temp { font-size: 3.2rem; }
-            .description { font-size: 1.3rem; }
-            .details-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-            .card { padding: 12px 8px; }
-            .card-value { font-size: 1.2rem; }
-            .forecast-grid {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: thin;
-                scrollbar-color: var(--accent) transparent;
-                padding-bottom: 16px;
-            }
-            .forecast-day { min-width: 105px; flex-shrink: 0; }
-            #share-btn { width: 100%; margin-top: 16px; font-size: 1.05rem; }
-        }
-
-        @media (max-width: 360px) {
-            .details-grid { grid-template-columns: 1fr; }
-            .forecast-day { min-width: 95px; }
+            .container { margin: 12px; padding: 20px; }
+            .weather-main { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
@@ -425,7 +397,7 @@
     let units = localStorage.getItem('units') || 'metric';
     document.getElementById('unit-toggle').textContent = units === 'metric' ? 'Switch to °F' : 'Switch to °C';
 
-    // ────────────────────────────── Dark Mode Setup ──────────────────────────────
+    // Dark mode setup
     let darkMode = localStorage.getItem('darkMode') === 'enabled' ||
                    (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
@@ -444,7 +416,6 @@
         localStorage.setItem('darkMode', darkMode ? 'enabled' : 'disabled');
         updateDarkToggle();
     });
-    // ──────────────────────────────────────────────────────────────────────────────
 
     // Auto-fill city from URL if present (?city=Accra)
     const urlParams = new URLSearchParams(window.location.search);
@@ -465,10 +436,6 @@
     } else {
         getUserLocation();
     }
-
-    // ──────────────────────────────────────────────────────────────────────────────
-    // Your original JavaScript functions (unchanged)
-    // ──────────────────────────────────────────────────────────────────────────────
 
     async function fetchCity(city, retryCount = 0) {
         if (!city) return showError('Enter a city name');
